@@ -5,7 +5,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,6 +16,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({ Key? key }) : super(key: key);
 
@@ -25,13 +25,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   TextEditingController num1Controller = TextEditingController();
   TextEditingController num2Controller = TextEditingController();
-
   TextEditingController addController = TextEditingController();
   TextEditingController subController = TextEditingController();
   TextEditingController mulController = TextEditingController();
   TextEditingController divController = TextEditingController();
+  int num1 = 0;
+  int num2 = 0;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -40,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('간단한 계산기'),
+          title: Text("간단한 계산기"),
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -50,7 +53,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   TextField(
                     controller: num1Controller,
-                    decoration: InputDecoration(labelText: '첫번째 숫자를 입력하세여.'),
+                    decoration: InputDecoration(
+                      labelText: "첫 번째 숫자를 입력하세요!"
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(
@@ -58,7 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   TextField(
                     controller: num2Controller,
-                    decoration: InputDecoration(labelText: '두번째 숫자를 입력하세여.'),
+                    decoration: InputDecoration(
+                      labelText: "두 번째 숫자를 입력하세요!"
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(
@@ -67,52 +74,83 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                        onPressed: (){},
-                        child: Text('계산하기'),
-                      ),
+                      ElevatedButton(onPressed: (){
+                        if (num1Controller.text == "" || num1Controller.text.isEmpty || num2Controller.text == "" || num2Controller.text.isEmpty) {
+
+                          showSnackBar(context);
+                        }else {
+                          
+                          setState(() {
+                            num1 = int.parse(num1Controller.text);
+                            num2 = int.parse(num2Controller.text);
+                            addController.text = "${num1 + num2}";
+                            subController.text = "${num1 - num2}";
+                            mulController.text = "${num1 * num2}";
+                            if ((num1 == 0 && num2 == 0) || (num1 != 0 && num2 == 0)) {
+                              divController.text = "나눗셈 불가능";
+                            }else {
+                              divController.text = "${num1 / num2}";
+                            }
+                          });
+                        }
+                      }, child: Text("계산하기")
+                      ,),
                       SizedBox(
-                    width: 30,
+                        width: 20,
+                     ),
+                     ElevatedButton(
+                       style: ButtonStyle(
+                         backgroundColor: MaterialStateProperty.all(Colors.redAccent)
                        ),
-                  ElevatedButton(
-                        onPressed: (){},
-                        child: Text('지우기'),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.redAccent),
-                        ),
-                      ),
+                       onPressed: (){
+                         num1Controller.text = "";
+                         num2Controller.text = "";
+                         addController.text = "";
+                         subController.text = "";
+                         mulController.text = "";
+                         divController.text = "";
+                      }, child: Text("지우기")
+                      ,),
                     ],
-                  ),
+                    ),
                   SizedBox(
-                    height: 10,
+                  height: 10,
                   ),
                   TextField(
                     controller: addController,
-                    decoration: InputDecoration(labelText: '덧셈 결과'),
+                    decoration: InputDecoration(
+                      labelText: "덧셈 결과"
+                    ),
                     readOnly: true,
                   ),
                   SizedBox(
-                    height: 10,
+                  height: 10,
                   ),
                   TextField(
                     controller: subController,
-                    decoration: InputDecoration(labelText: '뺄셈 결과'),
+                    decoration: InputDecoration(
+                      labelText: "뺄셈 결과"
+                    ),
                     readOnly: true,
                   ),
                   SizedBox(
-                    height: 10,
+                  height: 10,
                   ),
                   TextField(
                     controller: mulController,
-                    decoration: InputDecoration(labelText: '곱셈 결과'),
+                    decoration: InputDecoration(
+                      labelText: "곱셈 결과"
+                    ),
                     readOnly: true,
                   ),
                   SizedBox(
-                    height: 10,
+                  height: 10,
                   ),
                   TextField(
                     controller: divController,
-                    decoration: InputDecoration(labelText: '나눗셈 결과'),
+                    decoration: InputDecoration(
+                      labelText: "나눗셈 결과"
+                    ),
                     readOnly: true,
                   ),
                 ],
@@ -123,4 +161,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+void showSnackBar(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+    content: Text("숫자를 입력해주세요!"),
+    backgroundColor: Colors.teal,
+    )
+  );
 }
