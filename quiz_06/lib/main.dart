@@ -43,11 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(_images[0].toString(),
+                    Text(_images[num].toString(),
                         style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                     ),
                     Image.asset(
-                      'images/${_images[0]}',
+                      'images/${_images[num]}',
                       width: _lampWidth,
                       height: _lampHeigth,
                     )
@@ -88,21 +88,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void decisionLampSize(bool result){
-    if(_switch){
-      num -= 1;
-      if (num < 0){
-        num = _images.length-1;
+    setState(() {
+      if(_switch){
+        num += 1;
+        if (num > _images.length-1){
+          num = 0;
+        }
+      }else{
+        num -= 1;
+        if (num < 0){
+          num = _images.length-1;
+        }
       }
-      _lampWidth = 300;
-      _lampHeigth = 600;
-      _buttonName = "Image 축소";
-    }else{
-      num += 1;
-      _lampSizeStatus = "small";
-      _lampWidth = 150;
-      _lampHeigth = 300;
-      _buttonName = "Image 확대";
-    }
+    });
   }
 
   // void decisionOnOff(){
