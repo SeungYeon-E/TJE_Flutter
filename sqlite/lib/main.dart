@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sqlite/databaseHandler.dart';
 import 'package:sqlite/insertStudents.dart';
 import 'package:sqlite/students.dart';
+import 'package:sqlite/updateStudents.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,13 +38,13 @@ class _MyHomePageState extends State<MyHomePage> {
     handler = DatabaseHandler();
 
     // Temp Action (확인 끝나고 whenComplete 뭐할까)
-    handler.initializeDB().whenComplete(() async{
-      await addStudents();
-      // 추가해줘야 나와... 이게뭐여
-      setState(() {
+    // handler.initializeDB().whenComplete(() async{
+    //   await addStudents();
+    //   // 추가해줘야 나와... 이게뭐여
+    //   setState(() {
         
-      });
-    });
+    //   });
+    // });
   }
 
   @override
@@ -58,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return InsertStudents();
               })).then((value) => reloadData());
             }, 
-            icon: Icon(Icons.add_a_photo_outlined),
+            icon: Icon(Icons.add_outlined),
           ),
         ],
       ),
@@ -137,14 +138,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     onTap: (){
-                      // Navigator.push(context, MaterialPageRoute(builder: (context){
-                      //   return updateStudents(
-                      //     rcode: snapshot.data![index].code,
-                      //     rname: snapshot.data![index].name,
-                      //     rdept: snapshot.data![index].dept,
-                      //     rphone: snapshot.data![index].phone,
-                      //   );
-                      // })).then((value) => reloadData());
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return UpdateStudents(
+                          rcode: snapshot.data![index].code,
+                          rname: snapshot.data![index].name,
+                          rdept: snapshot.data![index].dept,
+                          rphone: snapshot.data![index].phone,
+                        );
+                      })).then((value) => reloadData());
                     },
                   ),
                 );
