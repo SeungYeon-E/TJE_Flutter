@@ -1,0 +1,202 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:market_mypage/orderlist.dart';
+
+class MyPage extends StatefulWidget {
+  final String rUserName;
+  const MyPage({ Key? key, required this.rUserName}) : super(key: key);
+
+  @override
+  _MyPageState createState() => _MyPageState(rUserName);
+}
+
+class _MyPageState extends State<MyPage> {
+  TextEditingController nameController = TextEditingController();
+
+  // Create Constructor
+  late String userName;
+
+  _MyPageState(String rUserName){
+    this.userName = rUserName;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoApp(
+      home: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+        middle: Text('MyPage'),
+        ),
+         child: Column(
+           children: [
+            SizedBox(
+              height: 100,
+            ),
+             Center(
+             child: Column(
+             children: [
+               Padding(
+                 padding: const EdgeInsets.all(10.0),
+                 child: CircleAvatar(
+                  backgroundImage: AssetImage('images/logo.png'),
+                  radius: 50.0,
+                ),
+               ),
+               Padding(
+                 padding: const EdgeInsets.all(15.0),
+                 child: Text(
+                    userName,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+               ),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   Container(
+                     child: Column(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Text('갯수'),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Text('구매후기')
+                       ],
+                     )
+                     ,
+                     height: 100,
+                     width: 100,
+                   ),
+                   SizedBox(
+                     width: 30,
+                   ),
+                   Container(
+                     child: Column(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Text('갯수'),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Text('주문상품')
+                       ],
+                     )
+                     ,
+                     height: 100,
+                     width: 100,
+                   ),
+                   SizedBox(
+                     width: 30,
+                   ),
+                   Container(
+                     child: Column(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Text('갯수'),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Text('장바구니')
+                       ],
+                     )
+                     ,
+                     height: 100,
+                     width: 100,
+                   ),
+                 ],
+               ),
+               Divider(
+                height: 30.0,
+                color: Colors.grey[700],
+                thickness: 0.5,
+              ),
+              GestureDetector(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Text('주문목록 / 배송조회',
+                            ),
+                          ],
+                        ),
+                        width: 350,
+                        height: 60,
+                      ),
+                    ),
+                    Text('〉')
+                  ],
+                ),
+                onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return OrderList();
+                  }));
+                },
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Text('주문 취소 목록',
+                          ),
+                        ],
+                      ),
+                      width: 350,
+                      height: 60,
+                    ),
+                  ),
+                  Text('〉')
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Text('리뷰 등록',
+                          ),
+                        ],
+                      ),
+                      width: 350,
+                      height: 60,
+                    ),
+                  ),
+                  Text('〉')
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Text('리뷰 삭제',
+                          ),
+                        ],
+                      ),
+                      width: 350,
+                      height: 60,
+                    ),
+                  ),
+                  Text('〉')
+                ],
+              ),
+
+             ],
+             ),
+           ),
+           ],
+         ),
+      ),
+    );
+  }
+}
