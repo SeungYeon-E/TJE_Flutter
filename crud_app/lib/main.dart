@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String result = '';
+  // String result = '';
   late List data;
 
   //앱을 실행하자마자 불러와서 화면에 띄울거야

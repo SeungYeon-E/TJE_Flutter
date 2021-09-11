@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:market_mypage/orderlist.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // for json
 
 class MyPage extends StatefulWidget {
   final String rUserName;
@@ -19,6 +21,17 @@ class _MyPageState extends State<MyPage> {
 
   _MyPageState(String rUserName){
     this.userName = rUserName;
+  }
+
+  late List data;
+
+  //앱을 실행하자마자 불러와서 화면에 띄울거야
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    data = [];
+    getJSONData();
   }
 
   @override
@@ -198,5 +211,22 @@ class _MyPageState extends State<MyPage> {
          ),
       ),
     );
+  }
+  // 안에 넣는 이유는 setState쓰기 위해
+  Future<String> getJSONData() async{
+    var url = Uri.parse('http://localhost:8080/Flutter_Market/student_query_flutter.jsp');
+    // asysc라 await 써준다
+    var response = await http.get(url);
+    // print(response.body);
+    setState(() {
+      // 리스트 지우기
+      data.clear();
+      var dataConvertedJSON = json.decode(response.body);
+      List result = dataConvertedJSON['results'];
+      // print(result);
+      data.addAll(result);
+    });
+
+    return "a";
   }
 }
