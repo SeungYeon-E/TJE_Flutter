@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if(value == 0){
             return MainPage();
           }else{
-            return MyPage(rUserName: '조효경');
+            return MyPage(rUserID: 'paul123');
           }
         },
       ),

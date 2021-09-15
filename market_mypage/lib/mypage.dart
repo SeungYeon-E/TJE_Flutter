@@ -1,26 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:market_mypage/cancellist.dart';
 import 'package:market_mypage/orderlist.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert'; // for json
+import 'dart:convert';
+
+import 'package:market_mypage/reviewlist.dart'; // for json
 
 class MyPage extends StatefulWidget {
-  final String rUserName;
-  const MyPage({ Key? key, required this.rUserName}) : super(key: key);
+  final String rUserID;
+  const MyPage({ Key? key, required this.rUserID}) : super(key: key);
 
   @override
-  _MyPageState createState() => _MyPageState(rUserName);
+  _MyPageState createState() => _MyPageState(rUserID);
 }
 
 class _MyPageState extends State<MyPage> {
-  TextEditingController nameController = TextEditingController();
+  // TextEditingController nameController = TextEditingController();
 
   // Create Constructor
-  late String userName;
+  late String userID;
 
-  _MyPageState(String rUserName){
-    this.userName = rUserName;
+  _MyPageState(String rUserID){
+    this.userID = rUserID;
   }
 
   late List data;
@@ -28,7 +31,6 @@ class _MyPageState extends State<MyPage> {
   //앱을 실행하자마자 불러와서 화면에 띄울거야
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     data = [];
     getJSONData();
@@ -38,9 +40,9 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     return CupertinoApp(
       home: CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-        middle: Text('MyPage'),
-        ),
+        // navigationBar: CupertinoNavigationBar(
+        // middle: Text('MyPage'),
+        // ),
          child: Column(
            children: [
             SizedBox(
@@ -59,7 +61,7 @@ class _MyPageState extends State<MyPage> {
                Padding(
                  padding: const EdgeInsets.all(15.0),
                  child: Text(
-                    userName,
+                    data[0]['name'].toString(),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                ),
@@ -70,7 +72,7 @@ class _MyPageState extends State<MyPage> {
                      child: Column(
                        mainAxisAlignment: MainAxisAlignment.center,
                        children: [
-                         Text('갯수'),
+                         Text(data[0]['reviewCount'].toString()),
                         SizedBox(
                           height: 30,
                         ),
@@ -88,7 +90,7 @@ class _MyPageState extends State<MyPage> {
                      child: Column(
                        mainAxisAlignment: MainAxisAlignment.center,
                        children: [
-                         Text('갯수'),
+                         Text(data[0]['buyCount'].toString()),
                         SizedBox(
                           height: 30,
                         ),
@@ -106,7 +108,7 @@ class _MyPageState extends State<MyPage> {
                      child: Column(
                        mainAxisAlignment: MainAxisAlignment.center,
                        children: [
-                         Text('갯수'),
+                         Text(data[0]['wishCount'].toString()),
                         SizedBox(
                           height: 30,
                         ),
@@ -133,6 +135,7 @@ class _MyPageState extends State<MyPage> {
                         child: Row(
                           children: [
                             Text('주문목록 / 배송조회',
+                              
                             ),
                           ],
                         ),
@@ -145,63 +148,84 @@ class _MyPageState extends State<MyPage> {
                 ),
                 onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                    return OrderList();
-                  }));
+                    return OrderList(rUserID: userID);
+                  })).then((value) => getJSONData());
                 },
               ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Text('주문 취소 목록',
-                          ),
-                        ],
+              GestureDetector(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Text('주문 취소 목록',
+                            ),
+                          ],
+                        ),
+                        width: 350,
+                        height: 60,
                       ),
-                      width: 350,
-                      height: 60,
                     ),
-                  ),
-                  Text('〉')
-                ],
+                    Text('〉')
+                  ],
+                ),
+                onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return CancelList(rUserID: userID);
+                  })).then((value) => getJSONData());
+                },
               ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Text('리뷰 등록',
-                          ),
-                        ],
+              GestureDetector(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Text('리뷰 등록',
+                            ),
+                          ],
+                        ),
+                        width: 350,
+                        height: 60,
                       ),
-                      width: 350,
-                      height: 60,
                     ),
-                  ),
-                  Text('〉')
-                ],
+                    Text('〉')
+                  ],
+                ),
+                onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return ReviewList(rUserID: userID);
+                  })).then((value) => getJSONData());
+                },
               ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Text('리뷰 삭제',
-                          ),
-                        ],
+              GestureDetector(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Text('리뷰 삭제',
+                            ),
+                          ],
+                        ),
+                        width: 350,
+                        height: 60,
                       ),
-                      width: 350,
-                      height: 60,
                     ),
-                  ),
-                  Text('〉')
-                ],
+                    Text('〉')
+                  ],
+                ),
+                onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return OrderList(rUserID: userID);
+                  })).then((value) => getJSONData());
+                },
               ),
 
              ],
@@ -214,7 +238,7 @@ class _MyPageState extends State<MyPage> {
   }
   // 안에 넣는 이유는 setState쓰기 위해
   Future<String> getJSONData() async{
-    var url = Uri.parse('http://localhost:8080/Flutter_Market/student_query_flutter.jsp');
+    var url = Uri.parse('http://localhost:8080/Flutter_Market/mypage_count_query_flutter.jsp?CustomerId=${userID}');
     // asysc라 await 써준다
     var response = await http.get(url);
     // print(response.body);
@@ -229,4 +253,5 @@ class _MyPageState extends State<MyPage> {
 
     return "a";
   }
+
 }

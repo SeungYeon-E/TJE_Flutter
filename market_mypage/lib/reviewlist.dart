@@ -1,64 +1,50 @@
-import 'package:crud_app/deleteStudent.dart';
-import 'package:crud_app/insertStudent.dart';
-import 'package:crud_app/updateStudent.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // for json
 
-void main() {
-  runApp(MyApp());
+class ReviewList extends StatefulWidget {
+  final String rUserID;
+  const ReviewList({ Key? key, required this.rUserID }) : super(key: key);
+
+  @override
+  _ReviewListState createState() => _ReviewListState(rUserID);
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
+class _ReviewListState extends State<ReviewList> {
+  // Create Constructor
+  late String userID;
+
+  _ReviewListState(String rUserID){
+    this.userID = rUserID;
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({ Key? key }) : super(key: key);
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  // String result = '';
   late List data;
 
   //앱을 실행하자마자 불러와서 화면에 띄울거야
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     data = [];
     getJSONData();
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('CRUD for Students'),
-        actions: [
-          IconButton(
+    return CupertinoApp(
+      home: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          leading: CupertinoNavigationBarBackButton(
+            previousPageTitle: 'My Page',
             onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context){
-                return InsertStudent();
-              })).then((value) => getJSONData());
-            }, 
-            icon: Icon(Icons.add_outlined),
-          )
-        ],
-      ),
-      body: Container(
+              // Message.contents = _messageBox!.text;
+              Navigator.pop(context);
+            },
+          ),
+          middle: Text('리뷰 목록'),
+        ),
+        child: Container(
         child: Center(
           // 삼항 연산자
           child: data.length == 0
@@ -73,14 +59,26 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Card(
                     child: Column(
                       children: [
+                        Image.asset(data[index]['filePath'].toString()),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              Text('Code : ',
+                              Text('주문일자 : ',
                               style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Text(data[index]['code'].toString()),
+                              Text(data[index]['buyDay'].toString()),
+                            ],
+                          ),
+                        ),
+                         Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Text('취소일자 : ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(data[index]['cancelDay'].toString()),
                             ],
                           ),
                         ),
@@ -88,10 +86,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              Text('Name : ',
+                              Text('주문번호 : ',
                               style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Text(data[index]['name'].toString()),
+                              Text(data[index]['orderNumber'].toString()),
                             ],
                           ),
                         ),
@@ -99,61 +97,52 @@ class _MyHomePageState extends State<MyHomePage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              Text('Dept : ',
+                              Text('주문목록 : ',
                               style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Text(data[index]['dept'].toString()),
+                              Text(data[index]['buyName'].toString()),
+                              Text(' 외 ${data[index]['buyCount'].toString()} 개'),
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Text('Phone : ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(data[index]['phone'].toString()),
-                            ],
-                          ),
-                        ),
+                        
                       ],
                     ),
                   ),
                   onTap: (){
-                    Navigator.push(context, 
-                    MaterialPageRoute(builder: (context){
-                      return UpdateStudent(
-                        rcode: data[index]['code'].toString(),
-                        rname: data[index]['name'].toString(),
-                        rdept: data[index]['dept'].toString(),
-                        rphone: data[index]['phone'].toString(),
-                      );
-                    })).then((value) => getJSONData());
+                    // Navigator.push(context, 
+                    // MaterialPageRoute(builder: (context){
+                    //   return UpdateStudent(
+                    //     rcode: data[index]['code'].toString(),
+                    //     rname: data[index]['name'].toString(),
+                    //     rdept: data[index]['dept'].toString(),
+                    //     rphone: data[index]['phone'].toString(),
+                    //   );
+                    // })).then((value) => getJSONData());
                   },
                   onLongPress: (){
-                    Navigator.push(context, 
-                    MaterialPageRoute(builder: (context){
-                      return DeleteStudent(
-                        rcode: data[index]['code'].toString(),
-                        rname: data[index]['name'].toString(),
-                        rdept: data[index]['dept'].toString(),
-                        rphone: data[index]['phone'].toString(),
-                      );
-                    })).then((value) => getJSONData());
+                  //   Navigator.push(context, 
+                  //   MaterialPageRoute(builder: (context){
+                  //     return DeleteStudent(
+                  //       rcode: data[index]['code'].toString(),
+                  //       rname: data[index]['name'].toString(),
+                  //       rdept: data[index]['dept'].toString(),
+                  //       rphone: data[index]['phone'].toString(),
+                  //     );
+                  //   })).then((value) => getJSONData());
                   },
                 );
               },
               itemCount: data.length,
-          ),
+            ),
         ),
+      ),
       ),
     );
   }
-
   // 안에 넣는 이유는 setState쓰기 위해
   Future<String> getJSONData() async{
-    var url = Uri.parse('http://localhost:8080/Flutter/student_query_flutter.jsp');
+    var url = Uri.parse('http://localhost:8080/Flutter_Market/mypage_reviewlist_query_flutter.jsp?CustomerId=${userID}');
     // asysc라 await 써준다
     var response = await http.get(url);
     // print(response.body);
@@ -165,6 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // print(result);
       data.addAll(result);
     });
+
     return "a";
   }
 }
